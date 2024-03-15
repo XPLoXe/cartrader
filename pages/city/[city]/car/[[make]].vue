@@ -1,6 +1,3 @@
-import { CarCards } from '#build/components'; import { CarCard } from
-'#build/components'; import { CarCard } from '#build/components'; import {
-CarSideBar } from '#build/components';
 <template>
   <div>
     <NavBar />
