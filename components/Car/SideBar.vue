@@ -49,6 +49,26 @@
       class="p-5 flex justify-between relative cursor-pointer border-b space-x-4"
     >
       <h3>Price</h3>
+      <h3 class="text-blue-400 capitalize" @click="updateModal('price')">
+        {{ priceRangeText }}
+      </h3>
+      <div
+        class="absolute border shadow left-44 p-5 top-1 -m-1 bg-white rounded space-y-4"
+        v-if="modal.price"
+      >
+        <input
+          class="border p-1 rounded"
+          type="number"
+          placeholder="Min"
+          v-model="priceRange.min"
+        /><input
+          class="border p-1 rounded"
+          type="number"
+          placeholder="Max"
+          v-model="priceRange.max"
+        />
+        <button class="btn" @click="onChangePrice">Apply</button>
+      </div>
     </div>
   </div>
 </template>
@@ -61,7 +81,18 @@ const modal = ref({
   price: false,
 });
 const city = ref("");
+const priceRange = ref({ min: "", max: "" });
 const route = useRoute();
+const router = useRouter();
+
+const priceRangeText = computed(() => {
+  const minPrice = route.query.minPrice;
+  const maxPrice = route.query.maxPrice;
+  if (!minPrice && !maxPrice) return "Any";
+  else if (!minPrice) return `Up to ${maxPrice}`;
+  else if (!maxPrice) return `Above ${minPrice}`;
+  else return `${minPrice} - ${maxPrice}`;
+});
 
 const updateModal = (key) => {
   modal.value[key] = !modal.value[key];
@@ -83,5 +114,31 @@ const onChangeLocation = () => {
 const onChangeMake = (make) => {
   updateModal("make");
   navigateTo(`/city/${route.params.city}/car/${make}`);
+};
+
+const onChangePrice = () => {
+  updateModal("price");
+
+  if (
+    priceRange.value.min !== "" &&
+    priceRange.value.max !== "" &&
+    priceRange.value.min > priceRange.value.max
+  ) {
+    throw createError({
+      statusCode: 400,
+      message: "Invalid price range. Please enter a valid range.",
+    });
+  }
+
+  // navigateTo(
+  //   `/city/${route.params.city}/car/${route.params.make}?minPrice=${priceRange.value.min}&maxPrice=${priceRange.value.max}`
+  // );
+
+  router.push({
+    query: {
+      minPrice: priceRange.value.min,
+      maxPrice: priceRange.value.max,
+    },
+  });
 };
 </script>
