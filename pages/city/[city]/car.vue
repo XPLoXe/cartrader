@@ -15,8 +15,8 @@
             <button class="btn max-w-48 mx-auto" @click="error.value = null">
               Go Back
             </button>
-          </div></template
-        >
+          </div>
+        </template>
       </NuxtErrorBoundary>
     </div>
   </div>
