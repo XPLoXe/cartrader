@@ -12,7 +12,12 @@
         v-if="modal.location"
         class="absolute border rounded shadow-lg left-44 p-5 top-1 -m-1 bg-white"
       >
-        <input type="text" class="border p-1 rounded" v-model="city" />
+        <input
+          type="text"
+          class="border p-1 rounded"
+          v-model="city"
+          @keydown.enter="onChangeLocation"
+        />
         <button
           @click="onChangeLocation"
           class="bg-blue-400 w-full mt-2 rounded text-white p-1"
