@@ -15,6 +15,11 @@ watch(
 
 <template>
   <div>
-    <CarCards :cars="cars" />
+    <CarCards v-if="cars.length" :cars="cars" />
+    <div v-else>
+      <h1 class="text-2xl text-center mt-10 text-red-700 font-bold">
+        No cars found
+      </h1>
+    </div>
   </div>
 </template>
