@@ -43,6 +43,7 @@ definePageMeta({
 
 const { makes } = useCars();
 const user = useSupabaseUser();
+const supabase = useSupabaseClient();
 
 const info = useState("adInfo", () => {
   return {
@@ -121,6 +122,14 @@ const isButtonDisabled = computed(() => {
 });
 
 const handleSubmit = async () => {
+  const fileName = Math.floor(Math.random() * 1000000000000000000000);
+  const { data, error } = await supabase.storage
+    .from("images")
+    .upload("public/" + fileName, info.value.image);
+  if (error) {
+    return (errorMessage.value = "Cannon upload image");
+  }
+
   //HTTP POST request to create a new listing
   const body = {
     ...info.value,
@@ -132,7 +141,7 @@ const handleSubmit = async () => {
     year: parseInt(info.value.year),
     name: `${info.value.make} ${info.value.model}`,
     listerId: user.value.id,
-    image: "asdasdad",
+    image: data.path,
   };
 
   delete body.seats;
@@ -145,6 +154,7 @@ const handleSubmit = async () => {
     navigateTo("/profile/listings");
   } catch (err) {
     errorMessage.value = err.statusMessage;
+    await supabase.storage.from("images").remove([data.path]);
   }
 };
 </script>
