@@ -8,11 +8,11 @@ const schema = Joi.object({
     minDomainSegments: 2,
     tlds: { allow: ["com", "net"] },
   }),
-  phone: Joi.string()
-    .length(10)
-    .pattern(new RegExp("^[0-9]{3}-[0-9]{3}-[0-9]{4}$"))
+  phone: Joi.string().length(10).required(),
+  name: Joi.string()
+    .pattern(/^[a-zA-Z\s]{3,30}$/)
     .required(),
-  name: Joi.string().alphanum().min(3).max(30).required(),
+
   message: Joi.string().min(3).max(1000).required(),
 });
 
