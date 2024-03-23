@@ -25,6 +25,12 @@
         @change-input="onChangeInput"
       />
       <CarAdImage @change-input="onChangeInput" />
+      <div>
+        <button :disabled="isButtonDisabled" @click="handleSubmit" class="btn">
+          Submit
+        </button>
+        <p v-if="errorMessage" class="mt-3 text-red-400">{{ errorMessage }}</p>
+      </div>
     </div>
   </div>
 </template>
@@ -36,6 +42,7 @@ definePageMeta({
 });
 
 const { makes } = useCars();
+const user = useSupabaseUser();
 
 const info = useState("adInfo", () => {
   return {
@@ -51,6 +58,8 @@ const info = useState("adInfo", () => {
     image: null,
   };
 });
+
+const errorMessage = ref("");
 
 const onChangeInput = (data, name) => {
   info.value[name] = data;
@@ -100,4 +109,42 @@ const inputs = [
     placeholder: "Leather Interior, No Accidents",
   },
 ];
+
+const isButtonDisabled = computed(() => {
+  //return Object.values(info.value).some((value) => value === "");
+  for (let key in info.value) {
+    if (!info.value[key]) {
+      return true;
+    }
+  }
+  return false;
+});
+
+const handleSubmit = async () => {
+  //HTTP POST request to create a new listing
+  const body = {
+    ...info.value,
+    city: info.value.city.toLowerCase(),
+    features: info.value.features.split(","),
+    numberOfSeats: parseInt(info.value.seats),
+    miles: parseInt(info.value.miles),
+    price: parseInt(info.value.price),
+    year: parseInt(info.value.year),
+    name: `${info.value.make} ${info.value.model}`,
+    listerId: user.value.id,
+    image: "asdasdad",
+  };
+
+  delete body.seats;
+
+  try {
+    const response = await $fetch("/api/car/listings", {
+      method: "POST",
+      body: JSON.stringify(body),
+    });
+    navigateTo("/profile/listings");
+  } catch (err) {
+    errorMessage.value = err.statusMessage;
+  }
+};
 </script>

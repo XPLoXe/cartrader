@@ -16,26 +16,26 @@ const schema = Joi.object({
   message: Joi.string().min(3).max(1000).required(),
 });
 
-export default defineEventHandler((event) => {
-    const body = await readBody(event)
-    const {listingId} = event.context.params;
+export default defineEventHandler(async (event) => {
+  const body = await readBody(event);
+  const { listingId } = event.context.params;
 
-    const {error} = await schema.validate(body);
+  const { error } = await schema.validate(body);
 
-    if (error) {
-        throw createError({
-            statusCode: 412,
-            statusMessage: error.message
-        }) 
-    }
+  if (error) {
+    throw createError({
+      statusCode: 412,
+      statusMessage: error.message,
+    });
+  }
 
-    return prisma.message.create({
-        data: {
-            email: body.email,
-            phone: body.phone,
-            name: body.name,
-            message: body.message,
-            listingId: parseInt(listingId)
-        }
-    })
+  return prisma.message.create({
+    data: {
+      email: body.email,
+      phone: body.phone,
+      name: body.name,
+      message: body.message,
+      listingId: parseInt(listingId),
+    },
+  });
 });
