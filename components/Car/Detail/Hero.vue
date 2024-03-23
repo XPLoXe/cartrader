@@ -1,13 +1,13 @@
 <template>
   <div>
     <div class="mt-10">
-      <NuxtImg :src="url" class="w-full" alt="" />
+      <NuxtImg :src="image" class="w-full" alt="" />
       <h1 class="mt-10 text-4xl">{{ name }}</h1>
       <div
         class="text-slate-500 flex text-lg mt-3 border-b pb-5 items-center justify-between"
       >
         <div class="flex">
-          <p class="mr-2">seats: {{ seats }}</p>
+          <p class="mr-2">seats: {{ numberOfSeats }}</p>
           <p class="mr-2">|</p>
           <p class="mr-2">{{ miles }} kilometers</p>
         </div>
@@ -22,10 +22,10 @@
 <script setup>
 //receive props from the parent
 const props = defineProps({
-  seats: Number,
+  numberOfSeats: Number,
   miles: String,
   price: String,
   name: String,
-  url: String,
+  image: String,
 });
 </script>

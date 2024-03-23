@@ -2,11 +2,11 @@
   <!-- CAR DETAIL PAGE -->
   <div>
     <CarDetailHero
-      :seats="seats"
+      :numberOfSeats="numberOfSeats"
       :miles="miles"
       :price="price"
       :name="name"
-      :url="url"
+      :image="image"
     />
     <CarDetailAttributes :features="features" />
     <CarDetailDescription :description="description" />
@@ -20,8 +20,8 @@ type Car = {
   id: string;
   name: string;
   price: string;
-  url: string;
-  seats: number;
+  image: string;
+  numberOfSeats: number;
   miles: string;
   features: string[];
   description: string;
@@ -36,5 +36,6 @@ const props = defineProps({
 });
 
 // Now TypeScript knows the structure of car, and it shouldn't complain
-const { id, name, price, url, seats, miles, features, description } = props.car;
+const { id, name, price, image, numberOfSeats, miles, features, description } =
+  props.car;
 </script>
